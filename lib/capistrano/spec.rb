@@ -17,6 +17,14 @@ module Capistrano
         @runs ||= {}
       end
 
+      def run_locally(cmd, options={}, &block)
+        run_locallys[cmd] = {:options => options, :block => block}
+      end
+
+      def run_locallys
+        @run_locallys ||= {}
+      end
+
       def upload(from, to, options={}, &block)
         uploads[from] = {:to => to, :options => options, :block => block}
       end
@@ -161,6 +169,15 @@ module Capistrano
         
       end
 
+      define :have_run_locally do |cmd|
+        match do |configuration|
+          configuration.run_locallys[cmd]
+        end
+
+        failure_message_for_should do |actual|
+          "expected configuration to run_locally #{cmd}, but did not"
+        end
+      end
     end
   end
 end
