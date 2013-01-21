@@ -174,8 +174,11 @@ module Capistrano
           configuration.run_locallys[cmd]
         end
 
-        failure_message_for_should do |actual|
-          "expected configuration to run_locally #{cmd}, but did not"
+        failure_message_for_should do |actual, expected|
+          message = ["expected configuration to run_locally, but did not", ""]
+          message << "expected: #{cmd}"
+          message << "     got: #{configuration.run_locallys.keys.join("\n" + " " * 10)}"
+          message.join("\n")
         end
       end
     end
